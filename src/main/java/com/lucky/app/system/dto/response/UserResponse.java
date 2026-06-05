@@ -1,0 +1,18 @@
+package com.lucky.app.system.dto.response;
+
+import com.lucky.app.system.enums.Role;
+import com.lucky.app.system.enums.UserStatus;
+import java.time.LocalDateTime;
+
+public record UserResponse(
+        Long id,
+        String fullName,
+        String email,
+        String phoneNumber,
+        Role role,
+        boolean emailVerified,
+        UserStatus status,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {
+}

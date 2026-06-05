@@ -1,0 +1,117 @@
+package com.lucky.app.system.controller;
+
+import com.lucky.app.system.dto.request.CustomerRequest;
+import com.lucky.app.system.dto.response.ApiResponse;
+import com.lucky.app.system.dto.response.CustomerResponse;
+import com.lucky.app.system.dto.response.PagedResponse;
+import com.lucky.app.system.service.interfaces.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/customers")
+@RequiredArgsConstructor
+@Tag(name = "Customers", description = "Customer management APIs")
+public class CustomerController {
+
+    private final CustomerService customerService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Create customer")
+    public ResponseEntity<ApiResponse<CustomerResponse>> create(@Valid @RequestBody CustomerRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer created successfully")
+                .data(customerService.create(request))
+                .build());
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "List customers")
+    public ResponseEntity<PagedResponse<CustomerResponse>> getAll(Pageable pageable) {
+        return ResponseEntity.ok(customerService.getAll(pageable));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Get customer by id")
+    public ResponseEntity<ApiResponse<CustomerResponse>> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer retrieved successfully")
+                .data(customerService.getById(id))
+                .build());
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @Operation(summary = "Get current customer profile")
+    public ResponseEntity<ApiResponse<CustomerResponse>> getMe() {
+        return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer profile retrieved successfully")
+                .data(customerService.getMe())
+                .build());
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Update customer")
+    public ResponseEntity<ApiResponse<CustomerResponse>> update(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
+        return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer updated successfully")
+                .data(customerService.update(id, request))
+                .build());
+    }
+
+    @PatchMapping("/{id}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Activate customer")
+    public ResponseEntity<ApiResponse<CustomerResponse>> activate(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer activated successfully")
+                .data(customerService.activate(id))
+                .build());
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Deactivate customer")
+    public ResponseEntity<ApiResponse<CustomerResponse>> deactivate(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer deactivated successfully")
+                .data(customerService.deactivate(id))
+                .build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete or deactivate customer")
+    public ResponseEntity<ApiResponse<CustomerResponse>> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer deletion processed successfully")
+                .data(customerService.delete(id))
+                .build());
+    }
+}
