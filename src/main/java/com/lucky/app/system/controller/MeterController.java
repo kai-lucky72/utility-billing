@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-@Tag(name = "Meters", description = "Meter management APIs")
+@Tag(name = "04. 👑 Admin · Meters", description = "Assign and manage meters. A meter must belong to an ACTIVE customer.")
 public class MeterController {
 
     private final MeterService meterService;
@@ -43,21 +43,21 @@ public class MeterController {
 
     @GetMapping("/meters")
     @PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
-    @Operation(summary = "List meters")
+    @Operation(summary = "List meters", tags = {"04. 👑 Admin · Meters", "07. 🔧 Operator · Meter Readings"})
     public ResponseEntity<PagedResponse<MeterResponse>> getAll(Pageable pageable) {
         return ResponseEntity.ok(meterService.getAll(pageable));
     }
 
     @GetMapping("/meters/active")
     @PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
-    @Operation(summary = "List active meters")
+    @Operation(summary = "List active meters", tags = {"04. 👑 Admin · Meters", "07. 🔧 Operator · Meter Readings"})
     public ResponseEntity<PagedResponse<MeterResponse>> getActive(Pageable pageable) {
         return ResponseEntity.ok(meterService.getActive(pageable));
     }
 
     @GetMapping("/meters/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','OPERATOR')")
-    @Operation(summary = "Get meter by id")
+    @Operation(summary = "Get meter by id", tags = {"04. 👑 Admin · Meters", "07. 🔧 Operator · Meter Readings"})
     public ResponseEntity<ApiResponse<MeterResponse>> getById(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.<MeterResponse>builder()
                 .success(true)

@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/admin/users")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
-@Tag(name = "Admin Users", description = "Admin-only staff user management APIs")
+@Tag(name = "02. 👑 Admin · Staff Users", description = "Create and manage Operator / Finance / Admin accounts.")
 public class AdminUserController {
 
     private final UserAdminService userAdminService;
@@ -77,7 +77,10 @@ public class AdminUserController {
     }
 
     @GetMapping("/customers/unlinked")
-    @Operation(summary = "List customer-role users that do not yet have a linked customer profile")
+    @Operation(
+            summary = "List customer-role users that do not yet have a linked customer profile",
+            tags = "03. 👑 Admin · Customers"
+    )
     public ResponseEntity<ApiResponse<List<UserResponse>>> getUnlinkedCustomerUsers(
             @RequestParam(name = "search", required = false) String search
     ) {

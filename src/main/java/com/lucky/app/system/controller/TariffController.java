@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/tariffs")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
-@Tag(name = "Tariffs", description = "Tariff management APIs")
+@Tag(name = "05. 👑 Admin · Tariffs", description = "Versioned FLAT or TIERED consumption tariffs. New versions apply only to future billing cycles.")
 public class TariffController {
 
     private final TariffService tariffService;
