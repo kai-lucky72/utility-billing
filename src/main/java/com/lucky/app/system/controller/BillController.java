@@ -4,6 +4,7 @@ import com.lucky.app.system.dto.response.ApiResponse;
 import com.lucky.app.system.dto.response.BillResponse;
 import com.lucky.app.system.dto.response.PagedResponse;
 import com.lucky.app.system.service.interfaces.BillingService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -87,6 +88,7 @@ public class BillController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('CUSTOMER')")
+    @Hidden
     @Operation(summary = "List the current customer's bills")
     public ResponseEntity<PagedResponse<BillResponse>> getMyBills(Pageable pageable) {
         return ResponseEntity.ok(billingService.getMyBills(pageable));

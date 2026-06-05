@@ -5,6 +5,7 @@ import com.lucky.app.system.dto.response.ApiResponse;
 import com.lucky.app.system.dto.response.PagedResponse;
 import com.lucky.app.system.dto.response.PaymentResponse;
 import com.lucky.app.system.service.interfaces.PaymentService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -78,6 +79,7 @@ public class PaymentController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('CUSTOMER')")
+    @Hidden
     @Operation(summary = "List the current customer's payments")
     public ResponseEntity<PagedResponse<PaymentResponse>> getMyPayments(Pageable pageable) {
         return ResponseEntity.ok(paymentService.getMyPayments(pageable));

@@ -1,15 +1,19 @@
 package com.lucky.app.system.controller;
 
+import com.lucky.app.system.dto.request.AdminConvertUserToCustomerRequest;
 import com.lucky.app.system.dto.request.CustomerRequest;
 import com.lucky.app.system.dto.response.ApiResponse;
 import com.lucky.app.system.dto.response.CustomerResponse;
 import com.lucky.app.system.dto.response.PagedResponse;
 import com.lucky.app.system.service.interfaces.CustomerService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,8 +49,19 @@ public class CustomerController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "List customers")
-    public ResponseEntity<PagedResponse<CustomerResponse>> getAll(Pageable pageable) {
+    public ResponseEntity<PagedResponse<CustomerResponse>> getAll(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
         return ResponseEntity.ok(customerService.getAll(pageable));
+    }
+
+    @GetMapping("/pending-verification")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "List customer profiles that are waiting for admin verification")
+    public ResponseEntity<PagedResponse<CustomerResponse>> getPendingVerification(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(customerService.getPendingVerification(pageable));
     }
 
     @GetMapping("/{id}")
@@ -71,6 +86,20 @@ public class CustomerController {
                 .build());
     }
 
+    @PostMapping("/from-user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Create a customer profile directly from an existing customer user")
+    public ResponseEntity<ApiResponse<CustomerResponse>> createFromUser(
+            @PathVariable Long userId,
+            @Valid @RequestBody AdminConvertUserToCustomerRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer profile created successfully and is pending admin verification")
+                .data(customerService.createForUser(userId, request))
+                .build());
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update customer")
@@ -84,12 +113,24 @@ public class CustomerController {
 
     @PatchMapping("/{id}/activate")
     @PreAuthorize("hasRole('ADMIN')")
+    @Hidden
     @Operation(summary = "Activate customer")
     public ResponseEntity<ApiResponse<CustomerResponse>> activate(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
                 .success(true)
                 .message("Customer activated successfully")
                 .data(customerService.activate(id))
+                .build());
+    }
+
+    @PatchMapping("/user/{userId}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Activate a customer profile using the linked user id")
+    public ResponseEntity<ApiResponse<CustomerResponse>> activateByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
+                .success(true)
+                .message("Customer activated successfully")
+                .data(customerService.activateByUserId(userId))
                 .build());
     }
 

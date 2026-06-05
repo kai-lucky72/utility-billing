@@ -1,6 +1,7 @@
 package com.lucky.app.system.service.impl;
 
 import com.lucky.app.system.dto.request.CreateStaffUserRequest;
+import com.lucky.app.system.dto.response.PagedResponse;
 import com.lucky.app.system.dto.response.UserResponse;
 import com.lucky.app.system.entity.User;
 import com.lucky.app.system.enums.Role;
@@ -12,8 +13,10 @@ import com.lucky.app.system.repository.CustomerRepository;
 import com.lucky.app.system.repository.UserRepository;
 import com.lucky.app.system.service.interfaces.UserAdminService;
 import com.lucky.app.system.util.EntityMapper;
+import com.lucky.app.system.util.PageResponseBuilder;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +52,15 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
+    public PagedResponse<UserResponse> getAllUsers(Pageable pageable) {
+        return PageResponseBuilder.build(
+                userRepository.findAll(pageable),
+                "Users retrieved successfully",
+                EntityMapper::toUserResponse
+        );
+    }
+
+    @Override
     public List<UserResponse> getAllStaffUsers() {
         return userRepository.findAllByRoleIn(List.of(Role.ROLE_ADMIN, Role.ROLE_OPERATOR, Role.ROLE_FINANCE))
                 .stream()
@@ -67,6 +79,11 @@ public class UserAdminServiceImpl implements UserAdminService {
                         || user.getFullName().toLowerCase().contains(term))
                 .map(EntityMapper::toUserResponse)
                 .toList();
+    }
+
+    @Override
+    public List<UserResponse> getUnlinkedCustomerUsers(String search) {
+        return getCustomerUsers(true, search);
     }
 
     @Override

@@ -36,6 +36,10 @@ public class TariffServiceImpl implements TariffService {
         if (request.effectiveTo() != null && request.effectiveTo().isBefore(request.effectiveFrom())) {
             throw new BusinessRuleException("Effective-to date cannot be before effective-from date");
         }
+        // Exam rule: new tariffs apply only to future billing cycles. Reject any backdated start.
+        if (request.effectiveFrom() == null || request.effectiveFrom().isBefore(java.time.LocalDate.now())) {
+            throw new BusinessRuleException("Effective-from must be today or a future date");
+        }
         Tariff tariff = new Tariff();
         tariff.setName(request.name());
         tariff.setMeterType(request.meterType());

@@ -1,5 +1,6 @@
 package com.lucky.app.system.service.impl;
 
+import com.lucky.app.system.dto.request.AdminConvertUserToCustomerRequest;
 import com.lucky.app.system.dto.request.CustomerProfileRequest;
 import com.lucky.app.system.dto.request.CustomerRequest;
 import com.lucky.app.system.dto.response.CustomerResponse;
@@ -8,6 +9,7 @@ import com.lucky.app.system.entity.Customer;
 import com.lucky.app.system.entity.User;
 import com.lucky.app.system.enums.CustomerStatus;
 import com.lucky.app.system.enums.Role;
+import com.lucky.app.system.enums.UserStatus;
 import com.lucky.app.system.exception.BusinessRuleException;
 import com.lucky.app.system.exception.DuplicateResourceException;
 import com.lucky.app.system.exception.ResourceNotFoundException;
@@ -121,8 +123,51 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
+    public CustomerResponse createForUser(Long userId, AdminConvertUserToCustomerRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        validateCustomerUserEligibility(user);
+        customerRepository.findByUser(user).ifPresent(existing -> {
+            throw new BusinessRuleException("This user already has a customer profile");
+        });
+        if (customerRepository.existsByNationalId(request.nationalId())) {
+            throw new DuplicateResourceException("Customer with this national ID already exists");
+        }
+
+        Customer customer = new Customer();
+        customer.setFullName(user.getFullName());
+        customer.setNationalId(request.nationalId());
+        customer.setEmail(user.getEmail());
+        customer.setPhoneNumber(user.getPhoneNumber());
+        customer.setAddress(request.address());
+        customer.setStatus(CustomerStatus.INACTIVE);
+        customer.setUser(user);
+        return EntityMapper.toCustomerResponse(customerRepository.save(customer));
+    }
+
+    @Override
     public CustomerResponse getMe() {
         return EntityMapper.toCustomerResponse(authenticatedUserService.currentCustomer());
+    }
+
+    @Override
+    public PagedResponse<CustomerResponse> getPendingVerification(Pageable pageable) {
+        return PageResponseBuilder.build(
+                customerRepository.findAllByStatusAndUserIsNotNull(CustomerStatus.INACTIVE, pageable),
+                "Pending customer verifications retrieved successfully",
+                EntityMapper::toCustomerResponse
+        );
+    }
+
+    @Override
+    @Transactional
+    public CustomerResponse activateByUserId(Long userId) {
+        Customer customer = customerRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No customer profile found for this user"));
+        validateCustomerUserEligibility(customer.getUser());
+        customer.setStatus(CustomerStatus.ACTIVE);
+        return EntityMapper.toCustomerResponse(customerRepository.save(customer));
     }
 
     private Customer getCustomer(Long id) {
@@ -154,9 +199,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (request.userId() != null) {
             User user = userRepository.findById(request.userId())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            if (user.getRole() != Role.ROLE_CUSTOMER) {
-                throw new BusinessRuleException("Only customer users can be linked to customer profiles");
-            }
+            validateCustomerUserEligibility(user);
             customerRepository.findByUser(user).ifPresent(existing -> {
                 if (!existing.getId().equals(customer.getId())) {
                     throw new BusinessRuleException("This user is already linked to another customer profile");
@@ -165,6 +208,18 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setUser(user);
         } else {
             customer.setUser(null);
+        }
+    }
+
+    private void validateCustomerUserEligibility(User user) {
+        if (user.getRole() != Role.ROLE_CUSTOMER) {
+            throw new BusinessRuleException("Only customer users can be linked to customer profiles");
+        }
+        if (!user.isEmailVerified()) {
+            throw new BusinessRuleException("Customer user must verify email before customer profile verification");
+        }
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new BusinessRuleException("Customer user must be active before customer profile verification");
         }
     }
 }

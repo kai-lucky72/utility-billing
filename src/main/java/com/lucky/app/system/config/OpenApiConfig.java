@@ -191,6 +191,10 @@ public class OpenApiConfig {
                     "password", "Staff123!",
                     "role", "ROLE_OPERATOR"
             );
+            case "AdminConvertUserToCustomerRequest" -> exampleMap(
+                    "nationalId", "1199080076543210",
+                    "address", "Kigali, Nyarugenge, Kiyovu"
+            );
             case "CustomerRequest" -> exampleMap(
                     "fullName", "Jean Customer",
                     "nationalId", "1199080076543210",

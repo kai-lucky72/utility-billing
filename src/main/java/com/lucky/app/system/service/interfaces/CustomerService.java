@@ -1,5 +1,6 @@
 package com.lucky.app.system.service.interfaces;
 
+import com.lucky.app.system.dto.request.AdminConvertUserToCustomerRequest;
 import com.lucky.app.system.dto.request.CustomerProfileRequest;
 import com.lucky.app.system.dto.request.CustomerRequest;
 import com.lucky.app.system.dto.response.CustomerResponse;
@@ -15,5 +16,8 @@ public interface CustomerService {
     CustomerResponse deactivate(Long id);
     CustomerResponse delete(Long id);
     CustomerResponse createMyProfile(CustomerProfileRequest request);
+    CustomerResponse createForUser(Long userId, AdminConvertUserToCustomerRequest request);
     CustomerResponse getMe();
+    PagedResponse<CustomerResponse> getPendingVerification(Pageable pageable);
+    CustomerResponse activateByUserId(Long userId);
 }

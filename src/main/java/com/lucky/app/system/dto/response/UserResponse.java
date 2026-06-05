@@ -1,6 +1,7 @@
 package com.lucky.app.system.dto.response;
 
 import com.lucky.app.system.enums.Role;
+import com.lucky.app.system.enums.CustomerStatus;
 import com.lucky.app.system.enums.UserStatus;
 import java.time.LocalDateTime;
 
@@ -12,6 +13,8 @@ public record UserResponse(
         Role role,
         boolean emailVerified,
         UserStatus status,
+        Long customerId,
+        CustomerStatus customerStatus,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

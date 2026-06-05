@@ -40,6 +40,8 @@ public final class EntityMapper {
                 user.getRole(),
                 user.isEmailVerified(),
                 user.getStatus(),
+                user.getCustomer() != null ? user.getCustomer().getId() : null,
+                user.getCustomer() != null ? user.getCustomer().getStatus() : null,
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );

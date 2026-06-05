@@ -9,7 +9,9 @@ import com.lucky.app.system.dto.response.TaxConfigResponse;
 import com.lucky.app.system.entity.FixedCharge;
 import com.lucky.app.system.entity.PenaltyConfig;
 import com.lucky.app.system.entity.TaxConfig;
+import com.lucky.app.system.exception.BusinessRuleException;
 import com.lucky.app.system.exception.ResourceNotFoundException;
+import java.time.LocalDate;
 import com.lucky.app.system.repository.FixedChargeRepository;
 import com.lucky.app.system.repository.PenaltyConfigRepository;
 import com.lucky.app.system.repository.TaxConfigRepository;
@@ -32,6 +34,7 @@ public class BillingConfigServiceImpl implements BillingConfigService {
     @Override
     @Transactional
     public FixedChargeResponse createFixedCharge(FixedChargeRequest request) {
+        validateEffectiveWindow(request.effectiveFrom(), request.effectiveTo());
         FixedCharge fixedCharge = new FixedCharge();
         fixedCharge.setMeterType(request.meterType());
         fixedCharge.setAmount(request.amount());
@@ -63,6 +66,7 @@ public class BillingConfigServiceImpl implements BillingConfigService {
     @Override
     @Transactional
     public TaxConfigResponse createTax(TaxConfigRequest request) {
+        validateEffectiveWindow(request.effectiveFrom(), request.effectiveTo());
         TaxConfig taxConfig = new TaxConfig();
         taxConfig.setName(request.name());
         taxConfig.setPercentage(request.percentage());
@@ -93,6 +97,7 @@ public class BillingConfigServiceImpl implements BillingConfigService {
     @Override
     @Transactional
     public PenaltyConfigResponse createPenalty(PenaltyConfigRequest request) {
+        validateEffectiveWindow(request.effectiveFrom(), request.effectiveTo());
         PenaltyConfig penaltyConfig = new PenaltyConfig();
         penaltyConfig.setName(request.name());
         penaltyConfig.setPenaltyType(request.penaltyType());
@@ -135,5 +140,17 @@ public class BillingConfigServiceImpl implements BillingConfigService {
     private PenaltyConfig getPenaltyEntity(Long id) {
         return penaltyConfigRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Penalty config not found"));
+    }
+
+    // Exam rule: new tariff/charge/tax/penalty configs apply only to future billing cycles.
+    // Reject backdated effectiveFrom so the time-based resolver cannot pick a new version
+    // for past reading dates regardless of version ordering.
+    private void validateEffectiveWindow(LocalDate from, LocalDate to) {
+        if (from == null || from.isBefore(LocalDate.now())) {
+            throw new BusinessRuleException("Effective-from must be today or a future date");
+        }
+        if (to != null && to.isBefore(from)) {
+            throw new BusinessRuleException("Effective-to date cannot be before effective-from date");
+        }
     }
 }

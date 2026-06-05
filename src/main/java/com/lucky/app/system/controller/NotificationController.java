@@ -4,6 +4,7 @@ import com.lucky.app.system.dto.response.ApiResponse;
 import com.lucky.app.system.dto.response.NotificationResponse;
 import com.lucky.app.system.dto.response.PagedResponse;
 import com.lucky.app.system.service.interfaces.NotificationService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class NotificationController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('CUSTOMER')")
+    @Hidden
     @Operation(summary = "List the current customer's notifications")
     public ResponseEntity<PagedResponse<NotificationResponse>> getMyNotifications(Pageable pageable) {
         return ResponseEntity.ok(notificationService.getMyNotifications(pageable));

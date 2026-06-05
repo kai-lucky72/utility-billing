@@ -2,13 +2,18 @@ package com.lucky.app.system.controller;
 
 import com.lucky.app.system.dto.request.CreateStaffUserRequest;
 import com.lucky.app.system.dto.response.ApiResponse;
+import com.lucky.app.system.dto.response.PagedResponse;
 import com.lucky.app.system.dto.response.UserResponse;
 import com.lucky.app.system.service.interfaces.UserAdminService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +45,14 @@ public class AdminUserController {
                 .build());
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "List all users in the system including whether they have a linked customer profile")
+    public ResponseEntity<PagedResponse<UserResponse>> getAllUsers(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(userAdminService.getAllUsers(pageable));
+    }
+
     @GetMapping
     @Operation(summary = "List staff users")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getStaffUsers() {
@@ -51,6 +64,7 @@ public class AdminUserController {
     }
 
     @GetMapping("/customers")
+    @Hidden
     @Operation(summary = "List customer-role users, e.g. to find a userId for linking a customer profile")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getCustomerUsers(
             @RequestParam(name = "unlinkedOnly", defaultValue = "false") boolean unlinkedOnly,
@@ -59,6 +73,18 @@ public class AdminUserController {
                 .success(true)
                 .message("Customer users retrieved successfully")
                 .data(userAdminService.getCustomerUsers(unlinkedOnly, search))
+                .build());
+    }
+
+    @GetMapping("/customers/unlinked")
+    @Operation(summary = "List customer-role users that do not yet have a linked customer profile")
+    public ResponseEntity<ApiResponse<List<UserResponse>>> getUnlinkedCustomerUsers(
+            @RequestParam(name = "search", required = false) String search
+    ) {
+        return ResponseEntity.ok(ApiResponse.<List<UserResponse>>builder()
+                .success(true)
+                .message("Unlinked customer users retrieved successfully")
+                .data(userAdminService.getUnlinkedCustomerUsers(search))
                 .build());
     }
 
