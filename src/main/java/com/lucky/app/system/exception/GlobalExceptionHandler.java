@@ -1,8 +1,11 @@
 package com.lucky.app.system.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lucky.app.system.dto.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -44,7 +47,7 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException.class
     })
     public ResponseEntity<ErrorResponse> handleMalformedRequest(Exception ex, HttpServletRequest request) {
-        return build(HttpStatus.BAD_REQUEST, "Malformed or missing request data", request.getRequestURI());
+        return build(HttpStatus.BAD_REQUEST, resolveMalformedRequestMessage(ex), request.getRequestURI());
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -120,5 +123,45 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .path(path)
                 .build());
+    }
+
+    private String resolveMalformedRequestMessage(Exception ex) {
+        if (ex instanceof HttpMessageNotReadableException notReadable) {
+            Throwable cause = notReadable.getMostSpecificCause();
+            if (cause instanceof InvalidFormatException invalidFormat) {
+                return resolveInvalidFormatMessage(invalidFormat);
+            }
+        }
+
+        if (ex instanceof MissingServletRequestParameterException missingParameter) {
+            return "Missing required parameter: " + missingParameter.getParameterName();
+        }
+
+        if (ex instanceof MethodArgumentTypeMismatchException typeMismatch && typeMismatch.getRequiredType() != null) {
+            if (typeMismatch.getRequiredType().isEnum()) {
+                return buildEnumValueMessage(typeMismatch.getName(), typeMismatch.getRequiredType());
+            }
+            return "Invalid value for parameter: " + typeMismatch.getName();
+        }
+
+        return "Malformed or missing request data";
+    }
+
+    private String resolveInvalidFormatMessage(InvalidFormatException invalidFormat) {
+        Class<?> targetType = invalidFormat.getTargetType();
+        if (targetType != null && targetType.isEnum()) {
+            String fieldName = invalidFormat.getPath().isEmpty()
+                    ? "value"
+                    : invalidFormat.getPath().get(invalidFormat.getPath().size() - 1).getFieldName();
+            return buildEnumValueMessage(fieldName, targetType);
+        }
+        return "Malformed or missing request data";
+    }
+
+    private String buildEnumValueMessage(String fieldName, Class<?> enumType) {
+        List<String> allowedValues = Arrays.stream(enumType.getEnumConstants())
+                .map(Object::toString)
+                .toList();
+        return "Invalid " + fieldName + ". Allowed values: " + String.join(", ", allowedValues);
     }
 }

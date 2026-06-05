@@ -5,12 +5,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lucky.app.system.dto.request.MeterRequest;
+import com.lucky.app.system.enums.MeterType;
 import com.lucky.app.system.entity.EmailVerificationOtp;
 import com.lucky.app.system.entity.User;
 import com.lucky.app.system.enums.Role;
 import com.lucky.app.system.enums.UserStatus;
 import com.lucky.app.system.repository.EmailVerificationOtpRepository;
 import com.lucky.app.system.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,21 @@ class AuthOtpFlowIntegrationTest {
 
     @MockBean
     private JavaMailSender javaMailSender;
+
+    @Test
+    void meterRequestAcceptsCaseInsensitiveEnumValue() throws Exception {
+        MeterRequest request = objectMapper.readValue("""
+                {
+                  "meterNumber": "WTR-2026-0002",
+                  "meterType": "Electricity",
+                  "installationDate": "2026-06-05",
+                  "customerId": 25
+                }
+                """, MeterRequest.class);
+
+        org.junit.jupiter.api.Assertions.assertEquals(MeterType.ELECTRICITY, request.meterType());
+        org.junit.jupiter.api.Assertions.assertEquals(LocalDate.of(2026, 6, 5), request.installationDate());
+    }
 
     @Test
     void registerThenVerifyThenLoginWorks() throws Exception {
