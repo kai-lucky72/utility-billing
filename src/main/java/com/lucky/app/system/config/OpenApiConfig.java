@@ -16,7 +16,6 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springdoc.core.customizers.OpenApiCustomizer;
-import org.springdoc.core.properties.SwaggerUiConfigProperties;
 
 @Configuration
 public class OpenApiConfig {
@@ -80,13 +79,6 @@ public class OpenApiConfig {
         };
     }
 
-    @Bean
-    public SwaggerUiConfigProperties swaggerUiConfigProperties(SwaggerUiConfigProperties properties) {
-        properties.setTagsSorter("alpha");
-        properties.setOperationsSorter("alpha");
-        return properties;
-    }
-
     private void removeSortFromPageableSchema(OpenAPI openApi) {
         if (openApi.getComponents() == null || openApi.getComponents().getSchemas() == null) {
             return;
@@ -124,6 +116,7 @@ public class OpenApiConfig {
         }
 
         Schema<?> schema = parameter.getSchema();
+
         switch (parameter.getName()) {
             case "id" -> {
                 schema.setExample(1L);
@@ -280,9 +273,11 @@ public class OpenApiConfig {
 
     private Map<String, Object> exampleMap(Object... entries) {
         Map<String, Object> values = new LinkedHashMap<>();
+
         for (int index = 0; index < entries.length; index += 2) {
             values.put((String) entries[index], entries[index + 1]);
         }
+
         return values;
     }
 
