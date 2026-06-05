@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@Tag(name = "01. 🔐 Authentication", description = "Public sign-up, email OTP verification, login per role, identity, logout. Used by every persona.")
+@Tag(name = "01. Authentication", description = "Public sign-up, email OTP verification, login per role, identity, and logout.")
 public class AuthController {
 
     private final AuthService authService;

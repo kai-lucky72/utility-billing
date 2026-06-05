@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.tags.Tag;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springdoc.core.customizers.OpenApiCustomizer;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
 
 @Configuration
 public class OpenApiConfig {
@@ -27,6 +29,7 @@ public class OpenApiConfig {
                         .version("v1")
                         .description("Secure utility billing backend for WASAC and REG exam project")
                         .contact(new Contact().name("OpenAI Codex")))
+                .tags(orderedTags())
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
@@ -43,6 +46,7 @@ public class OpenApiConfig {
                 return;
             }
 
+            openApi.setTags(orderedTags());
             removeSortFromPageableSchema(openApi);
 
             openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
@@ -74,6 +78,13 @@ public class OpenApiConfig {
                 }
             }));
         };
+    }
+
+    @Bean
+    public SwaggerUiConfigProperties swaggerUiConfigProperties(SwaggerUiConfigProperties properties) {
+        properties.setTagsSorter("alpha");
+        properties.setOperationsSorter("alpha");
+        return properties;
     }
 
     private void removeSortFromPageableSchema(OpenAPI openApi) {
@@ -273,5 +284,25 @@ public class OpenApiConfig {
             values.put((String) entries[index], entries[index + 1]);
         }
         return values;
+    }
+
+    private Tag tag(String name, String description) {
+        return new Tag().name(name).description(description);
+    }
+
+    private List<Tag> orderedTags() {
+        return List.of(
+                tag("01. Authentication", "Public sign-up, email OTP verification, login per role, identity, and logout."),
+                tag("02. Admin - Staff Users", "Create and manage Operator, Finance, and Admin accounts."),
+                tag("03. Admin - Customers", "Verify, activate or deactivate, and manage customer profiles, including user-to-customer conversion."),
+                tag("04. Admin - Meters", "Assign and manage meters. A meter must belong to an active customer."),
+                tag("05. Admin - Tariffs", "Versioned flat or tiered consumption tariffs used for future billing cycles."),
+                tag("06. Admin - Billing Configuration", "Fixed charges, taxes, and penalties used during bill calculation."),
+                tag("07. Operator - Meter Readings", "Capture and review meter readings. Valid readings trigger bill generation."),
+                tag("08. Finance - Bills", "Review, generate, approve, cancel, and process overdue bills."),
+                tag("09. Finance - Payments", "Record and review payments against approved bills."),
+                tag("10. Finance - Notifications", "Oversight of bill, overdue, payment, and customer notifications."),
+                tag("11. Customer - Self Service", "Customer profile completion and customer-owned data access.")
+        );
     }
 }

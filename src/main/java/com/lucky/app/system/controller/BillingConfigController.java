@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
-@Tag(name = "Billing Config", description = "Fixed charges, taxes, and penalties")
+@Tag(name = "06. Admin - Billing Configuration", description = "Fixed charges, taxes, and penalties used during bill calculation.")
 public class BillingConfigController {
 
     private final BillingConfigService billingConfigService;

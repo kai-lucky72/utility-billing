@@ -6,6 +6,9 @@ follow the actual implemented endpoints.
 ## 1. End-to-end business flow
 
 ```mermaid
+---
+id: 211cfd6f-28f8-430c-917a-6a6b86e9fbcc
+---
 flowchart TD
     subgraph PUBLIC["Public visitor"]
         A1["POST /auth/register<br/>(fullName, email, phone, password)"]

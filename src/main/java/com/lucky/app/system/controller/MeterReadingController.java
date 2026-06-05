@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/readings")
 @RequiredArgsConstructor
-@Tag(name = "Meter Readings", description = "Meter reading management APIs")
+@Tag(name = "07. Operator - Meter Readings", description = "Capture and review meter readings. Valid readings trigger bill generation.")
 public class MeterReadingController {
 
     private final MeterReadingService meterReadingService;

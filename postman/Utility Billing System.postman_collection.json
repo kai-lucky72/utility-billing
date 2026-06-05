@@ -183,6 +183,25 @@
               }
             },
             {
+              "name": "List All Users",
+              "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "const rows = json.data || [];",
+                "if (rows.length > 0) {",
+                "  pm.environment.set('anyUserId', rows[0].id);",
+                "  const pending = rows.find(function (row) { return row.customerId && row.customerStatus === 'INACTIVE'; });",
+                "  if (pending) {",
+                "    pm.environment.set('customerId', pending.customerId);",
+                "    pm.environment.set('pendingCustomerUserId', pending.id);",
+                "  }",
+                "}"
+              ] } } ],
+              "request": {
+                "method": "GET",
+                "url": { "raw": "{{baseUrl}}/api/v1/admin/users/all?page=0&size=20", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "admin", "users", "all" ], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "20" } ] }
+              }
+            },
+            {
               "name": "Create Staff User (Operator / Finance / Admin)",
               "event": [
                 { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [
@@ -227,8 +246,21 @@
               "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/customers?page=0&size=20", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "customers" ], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "20" } ] } }
             },
             {
-              "name": "Activate Customer (Approve Verification)",
-              "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/v1/customers/{{customerId}}/activate", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "customers", "{{customerId}}", "activate" ] }, "description": "Step that turns a self-submitted (INACTIVE) profile into an ACTIVE billable customer." }
+              "name": "List Pending Verification Customers",
+              "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+                "const json = pm.response.json();",
+                "const rows = json.data || [];",
+                "if (rows.length > 0) {",
+                "  pm.environment.set('customerId', rows[0].id);",
+                "  if (rows[0].userId) { pm.environment.set('pendingCustomerUserId', rows[0].userId); }",
+                "}",
+                "pm.test('Pending verification list loaded', function () { pm.expect(pm.response.code).to.equal(200); });"
+              ] } } ],
+              "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/customers/pending-verification?page=0&size=20", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "customers", "pending-verification" ], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "20" } ] } }
+            },
+            {
+              "name": "Activate Customer By User Id (Approve Verification)",
+              "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/v1/customers/user/{{pendingCustomerUserId}}/activate", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "customers", "user", "{{pendingCustomerUserId}}", "activate" ] }, "description": "Official verification step for a self-submitted or linked customer profile. Run 'List Pending Verification Customers' first." }
             },
             {
               "name": "Create Customer (Standalone)",
@@ -255,7 +287,7 @@
               }
             },
             {
-              "name": "List Customer Users (Find userId for Linking)",
+              "name": "List Unlinked Customer Users (Find userId for Linking)",
               "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
                 "const json = pm.response.json();",
                 "const rows = json.data || [];",
@@ -264,8 +296,8 @@
               ] } } ],
               "request": {
                 "method": "GET",
-                "url": { "raw": "{{baseUrl}}/api/v1/admin/users/customers?unlinkedOnly=true&search=", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "admin", "users", "customers" ], "query": [ { "key": "unlinkedOnly", "value": "true", "description": "true = only users without a customer profile yet" }, { "key": "search", "value": "", "description": "optional email/name filter" } ] },
-                "description": "Lists ROLE_CUSTOMER users so an Admin can find a userId to link. Saves the first match into {{linkUserId}}. Set unlinkedOnly=false to list all customer users."
+                "url": { "raw": "{{baseUrl}}/api/v1/admin/users/customers/unlinked?search=", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "admin", "users", "customers", "unlinked" ], "query": [ { "key": "search", "value": "", "description": "optional email or full-name filter" } ] },
+                "description": "Lists only ROLE_CUSTOMER users that do not yet have a linked customer profile. Saves the first match into {{linkUserId}}."
               }
             },
             {
@@ -273,9 +305,9 @@
               "request": {
                 "method": "POST",
                 "header": [ { "key": "Content-Type", "value": "application/json" } ],
-                "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Linked Customer\",\n  \"nationalId\": \"1234567890123456\",\n  \"email\": \"linked.customer@example.com\",\n  \"phoneNumber\": \"0788123456\",\n  \"address\": \"Kigali, Gasabo\",\n  \"userId\": {{linkUserId}}\n}" },
-                "url": { "raw": "{{baseUrl}}/api/v1/customers", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "customers" ] },
-                "description": "Direct transform of a registered user into a customer. Run 'List Customer Users' first to populate {{linkUserId}}. The backend rejects non-customer roles and users already linked to a profile."
+                "body": { "mode": "raw", "raw": "{\n  \"nationalId\": \"1234567890123456\",\n  \"address\": \"Kigali, Gasabo\"\n}" },
+                "url": { "raw": "{{baseUrl}}/api/v1/customers/from-user/{{linkUserId}}", "host": [ "{{baseUrl}}" ], "path": [ "api", "v1", "customers", "from-user", "{{linkUserId}}" ] },
+                "description": "Official user-to-customer conversion path. Run 'List Unlinked Customer Users' first to populate {{linkUserId}}. The backend copies fullName, email, and phoneNumber from the user."
               }
             },
             {

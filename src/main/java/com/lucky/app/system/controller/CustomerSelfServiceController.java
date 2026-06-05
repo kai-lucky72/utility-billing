@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/customers/me")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('CUSTOMER')")
-@Tag(name = "Customer Self Service", description = "Customer-owned data APIs")
+@Tag(name = "11. Customer - Self Service", description = "Customer profile completion and customer-owned data access.")
 public class CustomerSelfServiceController {
 
     private final CustomerService customerService;

@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
-@Tag(name = "03. 👑 Admin · Customers", description = "Verify, activate/deactivate, and manage customer profiles. Includes the user→customer transformation paths.")
+@Tag(name = "03. Admin - Customers", description = "Verify, activate or deactivate, and manage customer profiles, including user-to-customer conversion.")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -77,7 +77,7 @@ public class CustomerController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('CUSTOMER')")
-    @Operation(summary = "Get current customer profile", tags = "11. 👤 Customer · Self Service")
+    @Operation(summary = "Get current customer profile", tags = "11. Customer - Self Service")
     public ResponseEntity<ApiResponse<CustomerResponse>> getMe() {
         return ResponseEntity.ok(ApiResponse.<CustomerResponse>builder()
                 .success(true)
