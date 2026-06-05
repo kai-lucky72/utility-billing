@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +72,16 @@ public class GlobalExceptionHandler {
         // Never echo raw SQL/constraint text to clients.
         log.warn("Data integrity violation on {}: {}", request.getRequestURI(), ex.getMostSpecificCause().getMessage());
         return build(HttpStatus.CONFLICT, "The request conflicts with existing data", request.getRequestURI());
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidSort(PropertyReferenceException ex, HttpServletRequest request) {
+        String propertyName = ex.getPropertyName();
+        String message = "Invalid sort field";
+        if (propertyName != null && !propertyName.isBlank()) {
+            message = "Invalid sort field: " + propertyName + ". Use a valid entity field name such as id or createdAt.";
+        }
+        return build(HttpStatus.BAD_REQUEST, message, request.getRequestURI());
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

@@ -1,16 +1,16 @@
 {
     "baseUrl":  "http://localhost:8080",
-    "executedAt":  "2026-06-05T12:38:31",
+    "executedAt":  "2026-06-05T12:57:21",
     "expectedEndpointCount":  74,
-    "testedEndpointCount":  85,
-    "passedCount":  85,
+    "testedEndpointCount":  59,
+    "passedCount":  59,
     "failedCount":  0,
     "results":  [
                     {
                         "endpoint":  "POST /api/v1/auth/register",
                         "status":  201,
                         "passed":  true,
-                        "note":  "Registered public.20260605123810144@example.com and OTP dispatch was requested"
+                        "note":  "Registered public.20260605125704167@example.com and OTP dispatch was requested"
                     },
                     {
                         "endpoint":  "POST /api/v1/auth/resend-verification-otp",
@@ -52,7 +52,7 @@
                         "endpoint":  "POST /api/v1/auth/login",
                         "status":  200,
                         "passed":  true,
-                        "note":  "Logged in as public.20260605123810144@example.com"
+                        "note":  "Logged in as public.20260605125704167@example.com"
                     },
                     {
                         "endpoint":  "GET /api/v1/auth/me",
@@ -356,162 +356,6 @@
                     },
                     {
                         "endpoint":  "GET /api/v1/notifications",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/notifications/customer/{customerId}",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "PATCH /api/v1/notifications/{id}/read",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/notifications/me",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/customers/me/meters",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/customers/me/bills",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/customers/me/payments",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/customers/me/notifications",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "PATCH /api/v1/customers/me/notifications/{id}/read",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "POST /api/v1/auth/logout",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/tariffs",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "POST /api/v1/tariffs",
-                        "status":  201,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/tariffs/{id}",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "POST /api/v1/tariffs/{id}/tiers",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "PATCH /api/v1/tariffs/{id}/deactivate",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/fixed-charges",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "POST /api/v1/fixed-charges",
-                        "status":  201,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/fixed-charges/{id}",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "PATCH /api/v1/fixed-charges/{id}/deactivate",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/taxes",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "POST /api/v1/taxes",
-                        "status":  201,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/taxes/{id}",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "PATCH /api/v1/taxes/{id}/deactivate",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/penalties",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "POST /api/v1/penalties",
-                        "status":  201,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "GET /api/v1/penalties/{id}",
-                        "status":  200,
-                        "passed":  true,
-                        "note":  ""
-                    },
-                    {
-                        "endpoint":  "PATCH /api/v1/penalties/{id}/deactivate",
                         "status":  200,
                         "passed":  true,
                         "note":  ""

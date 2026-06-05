@@ -7,6 +7,7 @@ import java.util.List;
 public interface UserAdminService {
     UserResponse createStaff(CreateStaffUserRequest request);
     List<UserResponse> getAllStaffUsers();
+    List<UserResponse> getCustomerUsers(boolean unlinkedOnly, String search);
     UserResponse activate(Long id);
     UserResponse deactivate(Long id);
 }

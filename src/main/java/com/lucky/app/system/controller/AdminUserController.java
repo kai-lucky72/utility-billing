@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,6 +47,18 @@ public class AdminUserController {
                 .success(true)
                 .message("Staff users retrieved successfully")
                 .data(userAdminService.getAllStaffUsers())
+                .build());
+    }
+
+    @GetMapping("/customers")
+    @Operation(summary = "List customer-role users, e.g. to find a userId for linking a customer profile")
+    public ResponseEntity<ApiResponse<List<UserResponse>>> getCustomerUsers(
+            @RequestParam(name = "unlinkedOnly", defaultValue = "false") boolean unlinkedOnly,
+            @RequestParam(name = "search", required = false) String search) {
+        return ResponseEntity.ok(ApiResponse.<List<UserResponse>>builder()
+                .success(true)
+                .message("Customer users retrieved successfully")
+                .data(userAdminService.getCustomerUsers(unlinkedOnly, search))
                 .build());
     }
 

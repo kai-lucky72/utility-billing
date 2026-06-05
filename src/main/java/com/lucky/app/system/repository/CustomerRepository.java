@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByNationalId(String nationalId);
     boolean existsByEmail(String email);
+    boolean existsByUser(User user);
     Optional<Customer> findByUser(User user);
     Page<Customer> findAllByStatus(com.lucky.app.system.enums.CustomerStatus status, Pageable pageable);
 }

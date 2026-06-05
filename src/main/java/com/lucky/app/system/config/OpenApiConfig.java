@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +43,13 @@ public class OpenApiConfig {
                 return;
             }
 
+            removeSortFromPageableSchema(openApi);
+
             openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
                 if (operation.getParameters() != null) {
+                    operation.setParameters(operation.getParameters().stream()
+                            .filter(parameter -> !"sort".equals(parameter.getName()))
+                            .toList());
                     operation.getParameters().forEach(this::applyParameterExamples);
                 }
 
@@ -68,6 +74,37 @@ public class OpenApiConfig {
                 }
             }));
         };
+    }
+
+    private void removeSortFromPageableSchema(OpenAPI openApi) {
+        if (openApi.getComponents() == null || openApi.getComponents().getSchemas() == null) {
+            return;
+        }
+
+        Schema<?> pageableSchema = openApi.getComponents().getSchemas().get("Pageable");
+        if (pageableSchema == null || pageableSchema.getProperties() == null) {
+            return;
+        }
+
+        Map<String, Schema> properties = pageableSchema.getProperties();
+        properties.remove("sort");
+
+        Schema<?> pageSchema = properties.get("page");
+        if (pageSchema != null) {
+            pageSchema.setExample(0);
+            pageSchema.setDescription("Zero-based page number.");
+        }
+
+        Schema<?> sizeSchema = properties.get("size");
+        if (sizeSchema != null) {
+            sizeSchema.setExample(10);
+            sizeSchema.setDescription("Number of records to return.");
+        }
+
+        pageableSchema.setExample(exampleMap(
+                "page", 0,
+                "size", 10
+        ));
     }
 
     private void applyParameterExamples(Parameter parameter) {

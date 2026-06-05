@@ -8,6 +8,7 @@ import com.lucky.app.system.enums.UserStatus;
 import com.lucky.app.system.exception.BusinessRuleException;
 import com.lucky.app.system.exception.DuplicateResourceException;
 import com.lucky.app.system.exception.ResourceNotFoundException;
+import com.lucky.app.system.repository.CustomerRepository;
 import com.lucky.app.system.repository.UserRepository;
 import com.lucky.app.system.service.interfaces.UserAdminService;
 import com.lucky.app.system.util.EntityMapper;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserAdminServiceImpl implements UserAdminService {
 
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -50,6 +52,19 @@ public class UserAdminServiceImpl implements UserAdminService {
     public List<UserResponse> getAllStaffUsers() {
         return userRepository.findAllByRoleIn(List.of(Role.ROLE_ADMIN, Role.ROLE_OPERATOR, Role.ROLE_FINANCE))
                 .stream()
+                .map(EntityMapper::toUserResponse)
+                .toList();
+    }
+
+    @Override
+    public List<UserResponse> getCustomerUsers(boolean unlinkedOnly, String search) {
+        String term = search == null ? "" : search.trim().toLowerCase();
+        return userRepository.findAllByRole(Role.ROLE_CUSTOMER).stream()
+                // unlinkedOnly: only users without a customer profile yet (candidates for direct linking).
+                .filter(user -> !unlinkedOnly || !customerRepository.existsByUser(user))
+                .filter(user -> term.isEmpty()
+                        || user.getEmail().toLowerCase().contains(term)
+                        || user.getFullName().toLowerCase().contains(term))
                 .map(EntityMapper::toUserResponse)
                 .toList();
     }
