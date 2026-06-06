@@ -34,6 +34,7 @@ import com.lucky.app.system.util.ReferenceGenerator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -227,7 +228,8 @@ public class BillingServiceImpl implements BillingService {
         bill.setAmountPaid(BigDecimal.ZERO);
         bill.setOutstandingBalance(totalAmount);
         bill.setStatus(BillStatus.PENDING_APPROVAL);
-        bill.setDueDate(reading.getReadingDate().plusDays(dueDays));
+        LocalDate issueDate = LocalDateTime.now().toLocalDate();
+        bill.setDueDate(issueDate.plusDays(dueDays));
         Bill finalBill = billRepository.save(bill);
         notificationService.create(finalBill.getCustomer(), finalBill, billGeneratedMessage(finalBill), NotificationType.BILL_GENERATED);
         return finalBill;

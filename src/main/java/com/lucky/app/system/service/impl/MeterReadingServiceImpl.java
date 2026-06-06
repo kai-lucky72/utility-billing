@@ -45,7 +45,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
     public MeterReadingResponse create(MeterReadingRequest request) {
         Meter meter = meterRepository.findById(request.meterId())
                 .orElseThrow(() -> new ResourceNotFoundException("Meter not found"));
-        validateMeter(meter, request.readingDate());
+        MeterReading latestReading = meterReadingRepository.findTopByMeterOrderByReadingDateDescIdDesc(meter).orElse(null);
+        validateMeter(meter, request.readingDate(), latestReading);
 
         int month = request.readingDate().getMonthValue();
         int year = request.readingDate().getYear();
@@ -53,9 +54,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
             throw new BusinessRuleException("A reading already exists for this meter in this month");
         }
 
-        BigDecimal previous = meterReadingRepository.findTopByMeterOrderByReadingDateDescIdDesc(meter)
-                .map(MeterReading::getCurrentReading)
-                .orElse(BigDecimal.ZERO);
+        BigDecimal previous = latestReading != null ? latestReading.getCurrentReading() : BigDecimal.ZERO;
         if (request.currentReading().compareTo(previous) <= 0) {
             throw new BusinessRuleException("Current reading must be greater than previous reading");
         }
@@ -111,9 +110,12 @@ public class MeterReadingServiceImpl implements MeterReadingService {
         );
     }
 
-    private void validateMeter(Meter meter, LocalDate readingDate) {
+    private void validateMeter(Meter meter, LocalDate readingDate, MeterReading latestReading) {
         if (readingDate.isAfter(LocalDate.now())) {
             throw new BusinessRuleException("Reading date cannot be in the future");
+        }
+        if (readingDate.isBefore(meter.getInstallationDate())) {
+            throw new BusinessRuleException("Reading date cannot be before the meter installation date");
         }
         if (meter.getStatus() != MeterStatus.ACTIVE) {
             throw new BusinessRuleException("Meter is inactive and cannot receive readings");
@@ -124,6 +126,11 @@ public class MeterReadingServiceImpl implements MeterReadingService {
         }
         if (customer.getUser() == null || customer.getUser().getStatus() != UserStatus.ACTIVE) {
             throw new BusinessRuleException("Customer must have an active user account before readings can be captured");
+        }
+        if (latestReading != null && !readingDate.isAfter(latestReading.getReadingDate())) {
+            throw new BusinessRuleException(
+                    "Reading date must be later than the latest existing reading date for this meter"
+            );
         }
     }
 }

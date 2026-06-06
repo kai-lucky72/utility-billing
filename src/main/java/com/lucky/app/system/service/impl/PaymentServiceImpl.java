@@ -22,6 +22,7 @@ import com.lucky.app.system.util.PageResponseBuilder;
 import com.lucky.app.system.util.ReferenceGenerator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +59,13 @@ public class PaymentServiceImpl implements PaymentService {
         }
         if (request.amountPaid().compareTo(bill.getOutstandingBalance()) > 0) {
             throw new BusinessRuleException("Payment amount cannot exceed outstanding balance");
+        }
+        LocalDate billIssuedDate = bill.getCreatedAt().toLocalDate();
+        if (request.paymentDate().isBefore(billIssuedDate)) {
+            throw new BusinessRuleException("Payment date cannot be earlier than the bill issue date");
+        }
+        if (bill.getApprovedAt() != null && request.paymentDate().isBefore(bill.getApprovedAt().toLocalDate())) {
+            throw new BusinessRuleException("Payment date cannot be earlier than the bill approval date");
         }
 
         User recordedBy = authenticatedUserService.currentUser();
