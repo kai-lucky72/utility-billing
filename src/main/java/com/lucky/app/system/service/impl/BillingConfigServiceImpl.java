@@ -24,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Admin configuration of the non-tariff billing inputs: fixed service charges, taxes (VAT), and
- * late-payment penalties. Each is versioned with an effective-from/to window validated on create.
+ * late-payment penalties. Each is versioned with an effective-from/to window; new configs only take
+ * effect from the first day of next month (never the current month) and remain in force for future
+ * months until the admin supersedes them.
  */
 @Service
 @RequiredArgsConstructor
@@ -146,12 +148,15 @@ public class BillingConfigServiceImpl implements BillingConfigService {
                 .orElseThrow(() -> new ResourceNotFoundException("Penalty config not found"));
     }
 
-    // Exam rule: new tariff/charge/tax/penalty configs apply only to future billing cycles.
-    // Reject backdated effectiveFrom so the time-based resolver cannot pick a new version
-    // for past reading dates regardless of version ordering.
+    // Exam rule: a new charge/tax/penalty config never applies in the month it is created; it takes
+    // effect from the first day of next month onward (and stays in effect for future months until the
+    // admin changes it). Rejecting current-month/backdated starts also stops the time-based resolver
+    // from ever picking a new version for the current or past billing cycles.
     private void validateEffectiveWindow(LocalDate from, LocalDate to) {
-        if (from == null || from.isBefore(LocalDate.now())) {
-            throw new BusinessRuleException("Effective-from must be today or a future date");
+        LocalDate firstDayOfNextMonth = LocalDate.now().withDayOfMonth(1).plusMonths(1);
+        if (from == null || from.isBefore(firstDayOfNextMonth)) {
+            throw new BusinessRuleException(
+                    "Effective-from must be the first day of next month or later (configuration cannot take effect in the current month)");
         }
         if (to != null && to.isBefore(from)) {
             throw new BusinessRuleException("Effective-to date cannot be before effective-from date");
