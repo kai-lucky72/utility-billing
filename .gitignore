@@ -30,7 +30,6 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
 
 ### Local runtime artifacts ###
 logs/
@@ -38,3 +37,5 @@ logs/
 
 ### Local AI tooling ###
 .claude/
+config.bat
+node_modules
