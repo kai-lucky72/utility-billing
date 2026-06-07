@@ -112,6 +112,8 @@ DECLARE
     v_grace_days     INT;
     v_cutoff         DATE;
     v_penalty        NUMERIC(19,4);
+    v_current_penalty NUMERIC(19,4);
+    v_current_outstanding NUMERIC(19,4);
     v_customer_name  TEXT;
 
     -- CURSOR over all bills that are past due and not yet penalised.
@@ -153,9 +155,15 @@ BEGIN
                    outstanding_balance = outstanding_balance + v_penalty,
                    status              = 'OVERDUE',
                    updated_at          = NOW()
-             WHERE id = bill_row.id;
+             WHERE id = bill_row.id
+             RETURNING penalty_amount, outstanding_balance
+                  INTO v_current_penalty, v_current_outstanding;
         ELSE
-            UPDATE bills SET status = 'OVERDUE', updated_at = NOW() WHERE id = bill_row.id;
+            UPDATE bills
+               SET status = 'OVERDUE', updated_at = NOW()
+             WHERE id = bill_row.id
+             RETURNING penalty_amount, outstanding_balance
+                  INTO v_current_penalty, v_current_outstanding;
         END IF;
 
         SELECT c.full_name INTO v_customer_name FROM customers c WHERE c.id = bill_row.customer_id;
@@ -167,7 +175,8 @@ BEGIN
             bill_row.id,
             'Dear ' || v_customer_name || ',' || E'\n' ||
             'Your ' || bill_row.billing_month || '/' || bill_row.billing_year ||
-            ' utility bill is overdue. Please settle the outstanding balance to avoid further penalties.',
+            ' utility bill is overdue. Penalty applied: ' || COALESCE(v_current_penalty, 0) ||
+            ' FRW. Remaining amount to be paid is ' || COALESCE(v_current_outstanding, bill_row.outstanding_balance) || ' FRW.',
             'BILL_OVERDUE',
             'UNREAD',
             NOW(),

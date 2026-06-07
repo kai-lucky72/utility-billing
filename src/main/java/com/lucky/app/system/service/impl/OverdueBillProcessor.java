@@ -61,11 +61,12 @@ public class OverdueBillProcessor {
     }
 
     private String overdueMessage(Bill bill) {
-        return "Dear %s,%nYour %d/%d utility bill is overdue. Outstanding balance is %s FRW."
+        return "Dear %s,%nYour %d/%d utility bill is overdue. Penalty applied: %s FRW. Remaining amount to be paid is %s FRW."
                 .formatted(
                         bill.getCustomer().getFullName(),
                         bill.getBillingMonth(),
                         bill.getBillingYear(),
+                        bill.getPenaltyAmount().setScale(2, RoundingMode.HALF_UP),
                         bill.getOutstandingBalance().setScale(2, RoundingMode.HALF_UP)
                 );
     }
