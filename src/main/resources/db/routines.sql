@@ -3,7 +3,8 @@
 -- Provides: (1) a TRIGGER on bill generation, (2) a TRIGGER on full payment,
 -- and (3) a STORED PROCEDURE using a CURSOR to process overdue bills.
 --
--- Run manually after the schema is created (ddl-auto=update) with:
+-- These are installed AUTOMATICALLY on every startup by DbRoutinesInitializer
+-- (after Hibernate recreates the schema via ddl-auto=create). To apply manually:
 --   psql -U postgres -h localhost -d utility_billing_db -f src/main/resources/db/routines.sql
 --
 -- NOTE: The Java NotificationService also creates these notifications and guards

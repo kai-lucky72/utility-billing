@@ -14,6 +14,7 @@ import com.lucky.app.system.repository.UserRepository;
 import com.lucky.app.system.service.interfaces.UserAdminService;
 import com.lucky.app.system.util.EntityMapper;
 import com.lucky.app.system.util.PageResponseBuilder;
+import com.lucky.app.system.util.PhoneNumberNormalizer;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class UserAdminServiceImpl implements UserAdminService {
         User user = new User();
         user.setFullName(request.fullName());
         user.setEmail(request.email().toLowerCase());
-        user.setPhoneNumber(request.phoneNumber());
+        user.setPhoneNumber(PhoneNumberNormalizer.toRwandaFormat(request.phoneNumber()));
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
         user.setEmailVerified(true);

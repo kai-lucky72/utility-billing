@@ -21,6 +21,7 @@ import com.lucky.app.system.repository.UserRepository;
 import com.lucky.app.system.service.interfaces.CustomerService;
 import com.lucky.app.system.util.EntityMapper;
 import com.lucky.app.system.util.PageResponseBuilder;
+import com.lucky.app.system.util.PhoneNumberNormalizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -194,7 +195,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setFullName(request.fullName());
         customer.setNationalId(request.nationalId());
         customer.setEmail(request.email() == null ? null : request.email().toLowerCase());
-        customer.setPhoneNumber(request.phoneNumber());
+        customer.setPhoneNumber(PhoneNumberNormalizer.toRwandaFormat(request.phoneNumber()));
         customer.setAddress(request.address());
         if (request.userId() != null) {
             User user = userRepository.findById(request.userId())

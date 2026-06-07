@@ -21,6 +21,7 @@ import com.lucky.app.system.repository.PenaltyConfigRepository;
 import com.lucky.app.system.repository.TariffRepository;
 import com.lucky.app.system.repository.TaxConfigRepository;
 import com.lucky.app.system.repository.UserRepository;
+import com.lucky.app.system.util.PhoneNumberNormalizer;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +63,7 @@ public class DataInitializer implements CommandLineRunner {
         customer.setFullName("Default Customer");
         customer.setNationalId("1234567890123456");
         customer.setEmail("customer@utility.rw");
-        customer.setPhoneNumber("0780000004");
+        customer.setPhoneNumber(PhoneNumberNormalizer.toRwandaFormat("0780000004"));
         customer.setAddress("Kigali, Rwanda");
         customer.setStatus(CustomerStatus.ACTIVE);
         customer.setUser(customerUser);
@@ -98,7 +99,7 @@ public class DataInitializer implements CommandLineRunner {
         User user = new User();
         user.setFullName(fullName);
         user.setEmail(email);
-        user.setPhoneNumber(phoneNumber);
+        user.setPhoneNumber(PhoneNumberNormalizer.toRwandaFormat(phoneNumber));
         user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole(role);
         user.setEmailVerified(true);

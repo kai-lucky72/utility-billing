@@ -19,6 +19,7 @@ import com.lucky.app.system.service.interfaces.AuthService;
 import com.lucky.app.system.service.interfaces.EmailVerificationService;
 import com.lucky.app.system.service.interfaces.TokenRevocationService;
 import com.lucky.app.system.util.EntityMapper;
+import com.lucky.app.system.util.PhoneNumberNormalizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setFullName(request.fullName());
         user.setEmail(email);
-        user.setPhoneNumber(request.phoneNumber());
+        user.setPhoneNumber(PhoneNumberNormalizer.toRwandaFormat(request.phoneNumber()));
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(Role.ROLE_CUSTOMER);
         user.setEmailVerified(false);

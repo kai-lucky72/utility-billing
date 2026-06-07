@@ -12,6 +12,7 @@ import com.lucky.app.system.dto.response.UserResponse;
 import com.lucky.app.system.service.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,9 +77,14 @@ public class AuthController {
 
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "Logout the current user and revoke the current JWT token")
-    public ResponseEntity<ApiResponse<String>> logout(@RequestHeader("Authorization") String authorizationHeader) {
-        authService.logout(authorizationHeader);
+    @Operation(
+            summary = "Logout the current user and revoke the active JWT token",
+            description = "One click: authorize once with the green Authorize button, then just Execute. "
+                    + "The token is read automatically from the Authorization header (no body, no manual paste). "
+                    + "After logout the token is blacklisted and can no longer be used."
+    )
+    public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request) {
+        authService.logout(request.getHeader("Authorization"));
         return ResponseEntity.ok(ApiResponse.<String>builder()
                 .success(true)
                 .message("Logout successful")
