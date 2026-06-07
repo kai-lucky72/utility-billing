@@ -14,6 +14,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A message sent to a customer about a bill event (generated, paid, overdue) or a payment.
+ * Stored as an in-app inbox entry (READ/UNREAD) and also emailed to the customer.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

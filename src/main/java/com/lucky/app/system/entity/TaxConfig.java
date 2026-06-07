@@ -9,6 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A tax (e.g. VAT) applied as a percentage of the bill subtotal. The active row whose
+ * effectiveFrom/effectiveTo window covers the billing date is used during bill calculation.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -19,6 +19,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Issues, resends, and verifies the 6-digit email OTPs used at sign-up. Generates codes with a
+ * secure RNG, enforces single-use and expiry, activates the user on success, and purges stale OTPs.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

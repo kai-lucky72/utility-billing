@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/readings")
 @RequiredArgsConstructor
 @Tag(name = "07. Operator - Meter Readings", description = "Capture and review meter readings. Valid readings trigger bill generation.")
+/** Operator/Admin REST endpoints to capture and review meter readings; a valid reading triggers bill generation. */
 public class MeterReadingController {
 
     private final MeterReadingService meterReadingService;

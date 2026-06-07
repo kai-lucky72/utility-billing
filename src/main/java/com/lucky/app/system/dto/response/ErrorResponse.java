@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
+/** Standard error envelope returned by the global exception handler: flag, message, timestamp, and request path. */
 @Getter
 @Builder
 public class ErrorResponse {

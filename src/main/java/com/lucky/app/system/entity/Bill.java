@@ -21,6 +21,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A monthly postpaid bill generated from a meter reading. Stores the full cost breakdown
+ * (tariff + fixed charge + tax + penalty), the running amountPaid/outstandingBalance, and the
+ * lifecycle status. Unique per (meter, month, year) so a reading is billed at most once.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

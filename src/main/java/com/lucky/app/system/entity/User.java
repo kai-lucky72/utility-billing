@@ -17,6 +17,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * A system login account (Admin, Operator, Finance, or Customer). Implements Spring
+ * Security's {@link UserDetails} so it plugs directly into authentication; the email is
+ * the username and the account is only enabled once the email is verified and status is ACTIVE.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

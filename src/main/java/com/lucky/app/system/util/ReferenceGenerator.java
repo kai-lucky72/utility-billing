@@ -2,6 +2,7 @@ package com.lucky.app.system.util;
 
 import java.time.LocalDate;
 
+/** Builds human-readable, unique reference codes for bills (BILL-YYYY-MM-######) and payments (PAY-...). */
 public final class ReferenceGenerator {
 
     private ReferenceGenerator() {

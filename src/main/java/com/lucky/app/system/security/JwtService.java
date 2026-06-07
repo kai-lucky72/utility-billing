@@ -16,6 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+/**
+ * Issues and validates JWTs. Signs tokens with the configured HMAC secret, embeds the user's email
+ * as the subject, and provides helpers to extract claims, the username, and expiry, and to check validity.
+ */
 @Service
 public class JwtService {
 

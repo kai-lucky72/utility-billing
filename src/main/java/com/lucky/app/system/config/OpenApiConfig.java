@@ -17,6 +17,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 
+/**
+ * Configures Swagger/OpenAPI: API metadata, the global Bearer (JWT) security scheme, ordered tags,
+ * and request-body/parameter examples so the Swagger UI is ready to try out without manual setup.
+ */
 @Configuration
 public class OpenApiConfig {
 

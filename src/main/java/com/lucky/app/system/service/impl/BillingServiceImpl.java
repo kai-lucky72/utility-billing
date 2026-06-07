@@ -46,6 +46,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Core billing engine: generates a bill from a meter reading (resolving the effective tariff,
+ * fixed charge, and tax), exposes bill queries, handles approve/cancel, and runs the scheduled
+ * overdue-bill sweep. Calculates flat and tiered tariff amounts and emits notifications.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

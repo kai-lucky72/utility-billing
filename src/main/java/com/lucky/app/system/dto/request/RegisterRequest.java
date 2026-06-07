@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/** Public sign-up payload for a new customer user. Validates name (letters only), email, and Rwandan phone. */
 public record RegisterRequest(
         @NotBlank(message = "Full name is required")
         @Pattern(regexp = "^[A-Za-z ]+$", message = "Full name must contain letters only")

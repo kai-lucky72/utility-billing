@@ -17,6 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Central Spring Security setup: stateless (JWT) sessions, CSRF disabled for a pure API, only the
+ * auth and Swagger endpoints public (everything else authenticated), the JWT filter installed
+ * before the username/password filter, and JSON 401s via the custom entry point.
+ */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {

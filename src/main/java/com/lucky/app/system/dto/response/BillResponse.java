@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/** API view of a bill: identity, customer/meter refs, full cost breakdown, balances, status, and audit fields. */
 public record BillResponse(
         Long id,
         String billReference,

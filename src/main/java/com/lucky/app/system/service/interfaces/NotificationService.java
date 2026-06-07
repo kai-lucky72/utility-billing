@@ -7,6 +7,7 @@ import com.lucky.app.system.entity.Customer;
 import com.lucky.app.system.enums.NotificationType;
 import org.springframework.data.domain.Pageable;
 
+/** Contract for creating (and emailing) notifications and reading/marking the customer inbox. */
 public interface NotificationService {
     NotificationResponse create(Customer customer, Bill bill, String message, NotificationType type);
     PagedResponse<NotificationResponse> getAll(Pageable pageable);

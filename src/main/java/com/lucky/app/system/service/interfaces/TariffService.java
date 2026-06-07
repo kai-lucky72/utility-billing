@@ -5,6 +5,7 @@ import com.lucky.app.system.dto.request.TariffTierRequest;
 import com.lucky.app.system.dto.response.TariffResponse;
 import java.util.List;
 
+/** Contract for creating versioned tariffs, adding tiers, and deactivating tariffs. */
 public interface TariffService {
     TariffResponse create(TariffRequest request);
     List<TariffResponse> getAll();

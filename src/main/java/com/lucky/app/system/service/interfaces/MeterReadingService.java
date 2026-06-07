@@ -5,6 +5,7 @@ import com.lucky.app.system.dto.response.MeterReadingResponse;
 import com.lucky.app.system.dto.response.PagedResponse;
 import org.springframework.data.domain.Pageable;
 
+/** Contract for capturing and querying meter readings. */
 public interface MeterReadingService {
     MeterReadingResponse create(MeterReadingRequest request);
     PagedResponse<MeterReadingResponse> getAll(Pageable pageable);

@@ -11,6 +11,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A one-time 6-digit code emailed to a user to verify their email at sign-up. Single-use
+ * (tracked by used/usedAt) and time-limited (expiresAt).
+ */
 @Getter
 @Setter
 @NoArgsConstructor

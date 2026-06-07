@@ -12,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Late-payment penalty rule: a FIXED amount or a PERCENTAGE of the outstanding balance, applied
+ * once a bill is past its due date plus the grace period. Versioned via effectiveFrom/effectiveTo.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

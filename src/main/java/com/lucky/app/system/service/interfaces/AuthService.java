@@ -9,6 +9,7 @@ import com.lucky.app.system.dto.response.OtpDispatchResponse;
 import com.lucky.app.system.dto.response.RegistrationResponse;
 import com.lucky.app.system.dto.response.UserResponse;
 
+/** Contract for authentication: register, email verification, login/logout, and current-user lookup. */
 public interface AuthService {
     RegistrationResponse register(RegisterRequest request);
     void verifyEmailOtp(VerifyEmailOtpRequest request);

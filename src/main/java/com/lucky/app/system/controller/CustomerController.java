@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 @Tag(name = "03. Admin - Customers", description = "Verify, activate or deactivate, and manage customer profiles, including user-to-customer conversion.")
+/** Admin REST endpoints for customer management: CRUD, activate/deactivate, and user-to-customer conversion. */
 public class CustomerController {
 
     private final CustomerService customerService;

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('CUSTOMER')")
 @Tag(name = "11. Customer - Self Service", description = "Customer profile completion and customer-owned data access.")
+/** Customer-only REST endpoints for completing one's own customer profile and accessing owned data. */
 public class CustomerSelfServiceController {
 
     private final CustomerService customerService;

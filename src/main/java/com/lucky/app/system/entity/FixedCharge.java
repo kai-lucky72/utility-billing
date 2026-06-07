@@ -12,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A versioned fixed service charge per meter type, added to every bill on top of consumption
+ * cost. Selected by the effectiveFrom/effectiveTo window at billing time.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

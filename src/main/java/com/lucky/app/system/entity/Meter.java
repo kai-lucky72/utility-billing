@@ -18,6 +18,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A water or electricity meter belonging to a customer. Identified by a unique meter number;
+ * only ACTIVE meters can accept readings. Holds the history of readings captured against it.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

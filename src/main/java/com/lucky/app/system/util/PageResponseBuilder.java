@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 import org.springframework.data.domain.Page;
 
+/** Converts a Spring Data {@link Page} of entities into a {@link PagedResponse} of DTOs with paging metadata. */
 public final class PageResponseBuilder {
 
     private PageResponseBuilder() {

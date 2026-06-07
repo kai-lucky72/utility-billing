@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/** Admin payload to create a staff (Operator/Finance/Admin) account; same field rules as registration plus role. */
 public record CreateStaffUserRequest(
         @NotBlank(message = "Full name is required")
         @Pattern(regexp = "^[A-Za-z ]+$", message = "Full name must contain letters only")

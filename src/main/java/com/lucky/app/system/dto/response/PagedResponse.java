@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
+/** Success envelope for paginated lists: the data page plus total elements/pages and current page/size. */
 @Getter
 @Builder
 public class PagedResponse<T> {

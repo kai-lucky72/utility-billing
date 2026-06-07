@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+/** Admin payload to create/update a customer: validates name, 16-digit national ID, email, and Rwandan phone. */
 public record CustomerRequest(
         @NotBlank(message = "Full name is required")
         @Pattern(regexp = "^[A-Za-z ]+$", message = "Full name must contain letters only")

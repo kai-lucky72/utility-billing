@@ -27,6 +27,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Customer CRUD and lifecycle: admin-managed customer records plus self-service/admin conversion
+ * of a login user into a customer profile. Enforces unique national ID/email, normalizes phone
+ * numbers to Rwanda format, and gates activation on an eligible, verified, active user account.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

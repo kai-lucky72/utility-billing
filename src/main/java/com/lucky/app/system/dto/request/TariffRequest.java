@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** Admin payload to create a tariff (flat or tiered, versioned). effectiveFrom must be a future month. */
 public record TariffRequest(
         @NotBlank(message = "Tariff name is required")
         String name,

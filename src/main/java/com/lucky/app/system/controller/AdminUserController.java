@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @Tag(name = "02. Admin - Staff Users", description = "Create and manage Operator, Finance, and Admin accounts.")
+/** Admin-only REST endpoints for creating and managing staff (Operator/Finance/Admin) login accounts. */
 public class AdminUserController {
 
     private final UserAdminService userAdminService;

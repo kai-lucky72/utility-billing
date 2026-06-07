@@ -22,6 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Admin management of staff login accounts (Operator, Finance, Admin). Staff are created
+ * pre-verified and active; this endpoint cannot create customer users. Phone numbers are
+ * normalized to Rwanda format and emails must be unique.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

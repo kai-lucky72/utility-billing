@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/** Data access for {@link Tariff}s: version history per meter type and resolution of the effective tariff. */
 public interface TariffRepository extends JpaRepository<Tariff, Long> {
     List<Tariff> findByMeterTypeOrderByVersionDesc(MeterType meterType);
     Optional<Tariff> findFirstByMeterTypeAndActiveTrueAndEffectiveFromLessThanEqualAndEffectiveToIsNullOrderByVersionDesc(

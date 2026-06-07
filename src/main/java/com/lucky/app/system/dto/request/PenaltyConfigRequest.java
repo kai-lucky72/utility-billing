@@ -8,6 +8,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** Admin payload to configure a late penalty: type (FIXED/PERCENTAGE), amount, grace days, and window. */
 public record PenaltyConfigRequest(
         @NotBlank(message = "Penalty name is required")
         String name,

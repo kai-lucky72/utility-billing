@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/bills")
 @RequiredArgsConstructor
 @Tag(name = "08. Finance - Bills", description = "Review, generate, approve, cancel, and process overdue bills.")
+/** Finance/Admin REST endpoints to review, generate, approve, cancel, and process overdue bills; customers read their own. */
 public class BillController {
 
     private final BillingService billingService;

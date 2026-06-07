@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/** Data access for {@link Meter}s: unique meter-number checks and lookups by customer/status. */
 public interface MeterRepository extends JpaRepository<Meter, Long> {
     boolean existsByMeterNumber(String meterNumber);
     Optional<Meter> findByMeterNumber(String meterNumber);

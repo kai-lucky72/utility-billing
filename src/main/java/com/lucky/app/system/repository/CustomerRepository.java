@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/** Data access for {@link Customer}s: uniqueness checks (national ID/email), user linkage, and status filters. */
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByNationalId(String nationalId);
     boolean existsByEmail(String email);

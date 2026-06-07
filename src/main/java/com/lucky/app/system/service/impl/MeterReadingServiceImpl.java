@@ -26,6 +26,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Captures meter readings (operator role). Enforces the business rules: meter active, customer
+ * active, current &gt; previous reading, one reading per meter per month, and sane reading dates.
+ * A successful reading immediately triggers bill generation.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

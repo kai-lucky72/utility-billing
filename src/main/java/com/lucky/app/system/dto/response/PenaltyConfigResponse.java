@@ -4,6 +4,7 @@ import com.lucky.app.system.enums.PenaltyType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** API view of a penalty rule: type, amount/percentage, grace days, active flag, and effective window. */
 public record PenaltyConfigResponse(
         Long id,
         String name,

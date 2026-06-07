@@ -13,6 +13,7 @@ import com.lucky.app.system.exception.ForbiddenException;
 import com.lucky.app.system.exception.ResourceNotFoundException;
 import com.lucky.app.system.repository.CustomerRepository;
 import com.lucky.app.system.repository.NotificationRepository;
+import com.lucky.app.system.service.interfaces.MailService;
 import com.lucky.app.system.service.interfaces.NotificationService;
 import com.lucky.app.system.util.EntityMapper;
 import com.lucky.app.system.util.PageResponseBuilder;
@@ -21,6 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Creates and queries customer notifications. Every notification is persisted (in-app inbox)
+ * and also emailed to the customer as a copy. Bill/payment notifications are de-duplicated per
+ * (bill, type) so the DB triggers and this service never produce two rows for the same event.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,26 +35,43 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final CustomerRepository customerRepository;
     private final AuthenticatedUserService authenticatedUserService;
+    private final MailService mailService;
 
     @Override
     @Transactional
     public NotificationResponse create(Customer customer, Bill bill, String message, NotificationType type) {
-        if (bill != null) {
-            return notificationRepository.findFirstByBillAndNotificationType(bill, type)
-                    .map(EntityMapper::toNotificationResponse)
-                    .orElseGet(() -> saveNotification(customer, bill, message, type));
-        }
-        return saveNotification(customer, bill, message, type);
+        // Reuse the row a DB trigger may already have inserted for this (bill, type) instead of
+        // duplicating it; otherwise create it. Either way the customer is emailed exactly once.
+        Notification notification = (bill != null)
+                ? notificationRepository.findFirstByBillAndNotificationType(bill, type)
+                        .orElseGet(() -> saveNotification(customer, bill, message, type))
+                : saveNotification(customer, bill, message, type);
+
+        // Send the same message as an email copy (best-effort; failures are logged, not thrown).
+        mailService.sendNotificationEmail(customer.getEmail(), customer.getFullName(),
+                subjectFor(type), notification.getMessage());
+
+        return EntityMapper.toNotificationResponse(notification);
     }
 
-    private NotificationResponse saveNotification(Customer customer, Bill bill, String message, NotificationType type) {
+    private Notification saveNotification(Customer customer, Bill bill, String message, NotificationType type) {
         Notification notification = new Notification();
         notification.setCustomer(customer);
         notification.setBill(bill);
         notification.setMessage(message);
         notification.setNotificationType(type);
         notification.setStatus(NotificationStatus.UNREAD);
-        return EntityMapper.toNotificationResponse(notificationRepository.save(notification));
+        return notificationRepository.save(notification);
+    }
+
+    /** Maps a notification type to a human-friendly email subject line. */
+    private String subjectFor(NotificationType type) {
+        return switch (type) {
+            case BILL_GENERATED -> "Your utility bill has been generated";
+            case PAYMENT_CONFIRMED -> "Payment received";
+            case BILL_PAID -> "Your utility bill is fully paid";
+            case BILL_OVERDUE -> "Your utility bill is overdue";
+        };
     }
 
     @Override

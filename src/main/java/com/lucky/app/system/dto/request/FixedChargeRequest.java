@@ -6,6 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** Admin payload to configure a fixed service charge per meter type, versioned with an effective window. */
 public record FixedChargeRequest(
         @NotNull(message = "Meter type is required")
         MeterType meterType,

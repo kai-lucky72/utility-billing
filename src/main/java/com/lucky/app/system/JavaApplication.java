@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
+/**
+ * Spring Boot entry point for the Utility Billing System. Enables scheduling (overdue-bill sweep,
+ * token cleanup) and method-level security so {@code @PreAuthorize} role checks on controllers apply.
+ */
 @SpringBootApplication
 @EnableScheduling
 @EnableMethodSecurity

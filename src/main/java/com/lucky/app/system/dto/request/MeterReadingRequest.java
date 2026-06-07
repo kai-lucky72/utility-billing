@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** Operator payload to capture a reading: meter, current reading (&gt; 0), and a non-future reading date. */
 public record MeterReadingRequest(
         @NotNull(message = "Meter ID is required")
         Long meterId,

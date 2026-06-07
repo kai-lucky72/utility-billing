@@ -18,6 +18,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Admin tariff configuration: create versioned flat or tiered tariffs and add tiers. Enforces the
+ * exam rules that new tariffs only take effect from a future month and that tiers are valid
+ * (non-negative, non-overlapping, positive rates).
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -36,9 +41,13 @@ public class TariffServiceImpl implements TariffService {
         if (request.effectiveTo() != null && request.effectiveTo().isBefore(request.effectiveFrom())) {
             throw new BusinessRuleException("Effective-to date cannot be before effective-from date");
         }
-        // Exam rule: new tariffs apply only to future billing cycles. Reject any backdated start.
-        if (request.effectiveFrom() == null || request.effectiveFrom().isBefore(java.time.LocalDate.now())) {
-            throw new BusinessRuleException("Effective-from must be today or a future date");
+        // Exam rule: a new tariff applies only to FUTURE billing cycles, never the current month.
+        // Billing cycles are monthly, so the earliest a tariff may take effect is the first day
+        // of next month. This blocks both backdated and current-month start dates.
+        java.time.LocalDate firstDayOfNextMonth = java.time.LocalDate.now().withDayOfMonth(1).plusMonths(1);
+        if (request.effectiveFrom() == null || request.effectiveFrom().isBefore(firstDayOfNextMonth)) {
+            throw new BusinessRuleException(
+                    "A new tariff must take effect from the first day of next month or later (not the current month)");
         }
         Tariff tariff = new Tariff();
         tariff.setName(request.name());

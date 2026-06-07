@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @Tag(name = "05. Admin - Tariffs", description = "Versioned flat or tiered consumption tariffs used for future billing cycles.")
+/** Admin-only REST endpoints to create versioned flat/tiered tariffs and add tiers (future-month effective only). */
 public class TariffController {
 
     private final TariffService tariffService;

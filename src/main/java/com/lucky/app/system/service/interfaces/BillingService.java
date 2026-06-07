@@ -5,6 +5,7 @@ import com.lucky.app.system.dto.response.PagedResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
+/** Contract for bill generation, queries, approval/cancellation, and overdue processing. */
 public interface BillingService {
     BillResponse generateBillForReadingId(Long readingId);
     List<BillResponse> generateMonthly(Integer month, Integer year);

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @Tag(name = "06. Admin - Billing Configuration", description = "Fixed charges, taxes, and penalties used during bill calculation.")
+/** Admin-only REST endpoints to configure fixed charges, taxes (VAT), and late-payment penalties. */
 public class BillingConfigController {
 
     private final BillingConfigService billingConfigService;

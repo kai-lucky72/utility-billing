@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/notifications")
 @RequiredArgsConstructor
 @Tag(name = "10. Finance - Notifications", description = "Oversight of bill, overdue, payment, and customer notifications.")
+/** REST endpoints for notifications: Finance/Admin oversight and customer access to their own inbox. */
 public class NotificationController {
 
     private final NotificationService notificationService;

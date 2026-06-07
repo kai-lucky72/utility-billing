@@ -13,6 +13,11 @@ import com.lucky.app.system.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Resolves the currently authenticated principal into domain objects: the login {@link User},
+ * their linked {@link Customer}, or their customer profile only if both account and profile are
+ * active. Used by self-service endpoints to scope data to the caller.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticatedUserService {

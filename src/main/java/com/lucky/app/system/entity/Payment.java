@@ -15,6 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A single payment recorded against a bill. Supports partial and full payments; each payment
+ * reduces the bill's outstanding balance and is stamped with the staff user who recorded it.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -6,6 +6,7 @@ import com.lucky.app.system.dto.response.PaymentResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
+/** Contract for recording and querying payments against bills. */
 public interface PaymentService {
     PaymentResponse create(PaymentRequest request);
     PagedResponse<PaymentResponse> getAll(Pageable pageable);

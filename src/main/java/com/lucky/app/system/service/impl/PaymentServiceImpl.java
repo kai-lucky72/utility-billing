@@ -29,6 +29,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Records payments against approved bills. Supports partial and full payments, updates the bill's
+ * amountPaid/outstandingBalance, flips status to PARTIALLY_PAID or PAID, and notifies the customer.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

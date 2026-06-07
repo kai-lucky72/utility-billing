@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/** API view of a meter reading: values, period, who captured it, and the bill it generated (if any). */
 public record MeterReadingResponse(
         Long id,
         Long meterId,

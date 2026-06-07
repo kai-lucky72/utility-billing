@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Common base for all JPA entities: an auto-generated identity primary key plus createdAt/updatedAt
+ * audit timestamps maintained automatically via JPA lifecycle callbacks.
+ */
 @Getter
 @Setter
 @MappedSuperclass

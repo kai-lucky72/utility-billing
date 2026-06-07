@@ -27,6 +27,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Authentication flows: sign-up (with email-OTP verification), login (issues a JWT), logout
+ * (revokes the JWT), and identity lookup. New public sign-ups become inactive customer users
+ * until their email is verified.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

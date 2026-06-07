@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/** Data access for {@link FixedCharge}s: resolves the active charge effective on a billing date by version. */
 public interface FixedChargeRepository extends JpaRepository<FixedCharge, Long> {
     Optional<FixedCharge> findFirstByMeterTypeAndActiveTrueAndEffectiveFromLessThanEqualAndEffectiveToIsNullOrderByVersionDesc(
             MeterType meterType, LocalDate effectiveDate);

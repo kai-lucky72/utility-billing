@@ -8,6 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A JWT that has been blacklisted by logout. The auth filter rejects any token listed here;
+ * expired entries are purged on a schedule.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

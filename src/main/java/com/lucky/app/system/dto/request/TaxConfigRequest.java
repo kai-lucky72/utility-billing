@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** Admin payload to configure a tax: name and a 0–100 percentage with an effective window. */
 public record TaxConfigRequest(
         @NotBlank(message = "Tax name is required")
         String name,

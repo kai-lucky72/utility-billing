@@ -17,6 +17,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A versioned consumption tariff for a meter type. Either FLAT (single ratePerUnit) or TIERED
+ * (priced via {@link TariffTier}s). The effectiveFrom/effectiveTo window controls which billing
+ * cycles it applies to; new tariffs are restricted to future months.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/** Data access for {@link MeterReading}s: monthly-duplicate check, latest reading, and period queries. */
 public interface MeterReadingRepository extends JpaRepository<MeterReading, Long> {
     boolean existsByMeterAndBillingMonthAndBillingYear(Meter meter, Integer billingMonth, Integer billingYear);
     Optional<MeterReading> findTopByMeterOrderByReadingDateDescIdDesc(Meter meter);

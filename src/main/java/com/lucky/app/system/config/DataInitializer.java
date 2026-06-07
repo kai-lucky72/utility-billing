@@ -30,6 +30,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Seeds a fresh database on startup with one user per role, a sample active customer with two meters,
+ * and baseline tariffs/charges/tax/penalty so the API is immediately testable. Runs only when the
+ * users table is empty (and {@code app.seed.enabled}); phone numbers are stored in Rwanda format.
+ */
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {

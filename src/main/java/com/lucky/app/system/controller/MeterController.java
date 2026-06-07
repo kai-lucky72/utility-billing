@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Tag(name = "04. Admin - Meters", description = "Assign and manage meters. A meter must belong to an active customer.")
+/** REST endpoints for meter management. Creation/lifecycle is admin-only; readings-related lookups allow operators. */
 public class MeterController {
 
     private final MeterService meterService;

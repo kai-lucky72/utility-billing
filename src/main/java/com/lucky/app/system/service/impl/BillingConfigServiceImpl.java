@@ -22,6 +22,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Admin configuration of the non-tariff billing inputs: fixed service charges, taxes (VAT), and
+ * late-payment penalties. Each is versioned with an effective-from/to window validated on create.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

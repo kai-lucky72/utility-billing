@@ -8,6 +8,7 @@ import com.lucky.app.system.dto.response.PenaltyConfigResponse;
 import com.lucky.app.system.dto.response.TaxConfigResponse;
 import java.util.List;
 
+/** Contract for admin configuration of fixed charges, taxes, and penalties (create/list/get/deactivate). */
 public interface BillingConfigService {
     FixedChargeResponse createFixedCharge(FixedChargeRequest request);
     List<FixedChargeResponse> getFixedCharges();

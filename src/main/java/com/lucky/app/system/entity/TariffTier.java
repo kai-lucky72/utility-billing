@@ -11,6 +11,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * One pricing band of a TIERED tariff: units from minUnits up to maxUnits (null = unbounded top
+ * tier) are charged at ratePerUnit. Tiers must be contiguous and start at 0.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

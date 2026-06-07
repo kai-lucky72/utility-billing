@@ -12,6 +12,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Maintains the JWT blacklist used for logout. Stores revoked tokens with their expiry, answers
+ * "is this token revoked?" for the auth filter, and purges expired entries on an hourly schedule.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

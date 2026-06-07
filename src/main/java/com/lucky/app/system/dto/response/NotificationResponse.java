@@ -4,6 +4,7 @@ import com.lucky.app.system.enums.NotificationStatus;
 import com.lucky.app.system.enums.NotificationType;
 import java.time.LocalDateTime;
 
+/** API view of a notification: linked bill, message text, type, and read/unread status. */
 public record NotificationResponse(
         Long id,
         Long customerId,

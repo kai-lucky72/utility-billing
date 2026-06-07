@@ -5,6 +5,7 @@ import com.lucky.app.system.enums.MeterType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/** API view of a meter: number, type, install date, status, and owning customer. */
 public record MeterResponse(
         Long id,
         String meterNumber,

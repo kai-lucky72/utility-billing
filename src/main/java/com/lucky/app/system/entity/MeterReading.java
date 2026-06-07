@@ -14,6 +14,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A monthly consumption reading for a meter. The unique constraint on
+ * (meter, billingMonth, billingYear) enforces the "one reading per meter per month" rule;
+ * consumption = currentReading - previousReading and drives bill generation.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

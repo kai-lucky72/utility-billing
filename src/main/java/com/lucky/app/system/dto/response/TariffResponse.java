@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/** API view of a tariff: type, rate (flat), version, effective window, and tiers (tiered). */
 public record TariffResponse(
         Long id,
         String name,

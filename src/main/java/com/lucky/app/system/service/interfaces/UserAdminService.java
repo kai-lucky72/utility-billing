@@ -6,6 +6,7 @@ import com.lucky.app.system.dto.response.UserResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
+/** Contract for admin management of staff and customer login accounts (create/list/activate). */
 public interface UserAdminService {
     UserResponse createStaff(CreateStaffUserRequest request);
     PagedResponse<UserResponse> getAllUsers(Pageable pageable);

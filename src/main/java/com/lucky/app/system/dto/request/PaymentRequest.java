@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/** Finance payload to record a payment: bill reference, positive amount, method, and non-future date. */
 public record PaymentRequest(
         @NotBlank(message = "Bill reference is required")
         String billReference,

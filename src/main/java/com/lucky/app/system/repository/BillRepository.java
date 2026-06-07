@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/** Data access for {@link Bill}s: reference/reading lookups, per-customer queries, and overdue sweeps. */
 public interface BillRepository extends JpaRepository<Bill, Long> {
     boolean existsByMeterAndBillingMonthAndBillingYear(Meter meter, Integer billingMonth, Integer billingYear);
     boolean existsByCustomer(Customer customer);

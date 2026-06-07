@@ -16,6 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A billable customer with a unique national ID and one or more meters. Optionally linked
+ * 1:1 to a login {@link User}. Only ACTIVE customers may receive readings, bills, and payments.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -26,6 +26,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+/**
+ * Translates exceptions thrown anywhere in the app into consistent JSON {@link ErrorResponse}s with
+ * the right HTTP status (validation -> 400, not found -> 404, duplicates -> 409, auth -> 401/403, etc.),
+ * so clients always get a uniform error shape instead of stack traces.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

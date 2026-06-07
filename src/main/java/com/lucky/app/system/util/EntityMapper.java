@@ -26,6 +26,10 @@ import com.lucky.app.system.entity.TaxConfig;
 import com.lucky.app.system.entity.User;
 import java.util.List;
 
+/**
+ * Central, stateless converter from JPA entities to their API response DTOs. Keeps mapping logic
+ * out of services/controllers so the wire shape of each resource is defined in one place.
+ */
 public final class EntityMapper {
 
     private EntityMapper() {

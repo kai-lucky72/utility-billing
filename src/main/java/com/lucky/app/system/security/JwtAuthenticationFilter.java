@@ -17,6 +17,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * Runs once per request: reads the Bearer token, rejects it if blacklisted (logged-out) or
+ * invalid/expired, and otherwise loads the user and populates the Spring Security context so
+ * downstream {@code @PreAuthorize} checks see an authenticated principal.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
